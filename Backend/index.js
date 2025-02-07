@@ -25,14 +25,14 @@ const urlSchema = new mongoose.Schema({
     app.post('/api/short',async(req,res)=>{
         try{
         const originalUrl = req.body.originalUrl;
-        if(originalUrl) return res.status(500).json({error:'original error'});
+        if(!originalUrl) return res.status(500).json({error:'original error'});
         const shortUrl=nanoid(8);
         const url =  new Url({originalUrl,shortUrl});
             await url.save();
-            return res.status(400).json({message: "URL generated", url:url})
+            return res.status(200).json({message: "URL generated", url:url})
         }catch(error){
             console.log(error)
-            res.status(200).json({error:'server error'});
+            res.status(500).json({error:'server error'});
         }
     })
 app.get('/:shortUrl',async(req,res)=>{
