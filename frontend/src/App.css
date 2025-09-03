@@ -1,0 +1,47 @@
+.App {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F9F3EF;
+}
+
+.form-container {
+  padding: 40px;
+  border-radius: 16px;
+  background-color: #FAF7F3;
+  text-align: center;
+  width: 400px;
+  max-width: 90%;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.submit-btn {
+  background-color: #1B3C53 !important;
+  color: #fff !important;
+}
+
+.submit-btn:hover {
+  background-color: #456882 !important;
+}
+
+.short-url {
+  margin-top: 20px;
+  color: #1B3C53;
+  word-break: break-word;
+}
+
+.short-url a {
+  color: #456882;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.short-url a:hover {
+  text-decoration: underline;
+}

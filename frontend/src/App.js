@@ -1,42 +1,87 @@
-
-import { Button } from '@mui/material';
-import './App.css';
-import TextField from '@mui/material/TextField';
+import { Button, TextField, Typography, Paper } from '@mui/material';
 import { useState } from 'react';
 import axios from 'axios';
 
-function  App() {
+function App() {
+  const [url, setUrl] = useState("");
+  const [shortUrl, setShortUrl] = useState("");
 
-
-  const[url,seturl]=useState();
-  const[shortUrl,setshortUrl] = useState()
-;
-  const submitUrl = async (e)=>{
+  const submitUrl = async (e) => {
     e.preventDefault();
-const data=await axios.post("http://localhost:3000/api/short",{"originalUrl":url})
-console.log(data.data.url.shortUrl);
-setshortUrl("http://localhost:3000/"+data.data.url.shortUrl)
-  }
+    try {
+      const data = await axios.post("http://localhost:3000/api/short", {
+        originalUrl: url
+      });
+      setShortUrl("http://localhost:3000/" + data.data.url.shortUrl);
+    } catch (err) {
+      console.error("Error creating short URL:", err);
+    }
+  };
+
   return (
-    <div className="App">
-      <form onSubmit={submitUrl} >
-       
-      <TextField
-          onChange = {(e)=>seturl(e.target.value)}
-          id="standard-textarea"
-          label="Enter Original URL"
-          placeholder="URL"
-          multiline
-          variant="standard"
-        />
-        <Button type='submit' variant="contained">Submit</Button>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#F9F3EF",
+      }}
+    >
+      <Paper
+        elevation={6}
+        sx={{
+          padding: 4,
+          borderRadius: 4,
+          backgroundColor: "#D2C1B6",
+          textAlign: "center",
+          width: "400px",
+          maxWidth: "90%",
+        }}
+      >
+        <Typography variant="h4" gutterBottom sx={{ color: "#1B3C53" }}>
+          URL Shortener
+        </Typography>
 
-      {shortUrl && 
-      <h3>Your short URL = {shortUrl}</h3>
-      }
+        <form
+          onSubmit={submitUrl}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        >
+          <TextField
+            onChange={(e) => setUrl(e.target.value)}
+            label="Enter Original URL"
+            placeholder="https://example.com"
+            variant="outlined"
+            fullWidth
+          />
 
-        
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              backgroundColor: "#1B3C53",
+              "&:hover": { backgroundColor: "#456882" },
+            }}
+          >
+            Submit
+          </Button>
         </form>
+
+        {shortUrl && (
+          <Typography
+            variant="h6"
+            sx={{ marginTop: 2, color: "#1B3C53", wordBreak: "break-word" }}
+          >
+            Your short URL:{" "}
+            <a
+              href={shortUrl}
+              style={{ color: "#456882", fontWeight: "bold" }}
+            >
+              {shortUrl}
+            </a>
+          </Typography>
+        )}
+      </Paper>
     </div>
   );
 }

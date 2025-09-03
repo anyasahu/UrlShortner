@@ -23,16 +23,17 @@ const urlSchema = new mongoose.Schema({
     const Url=mongoose.model('url',urlSchema)
 
     app.post('/api/short',async(req,res)=>{
+        console.log('POST /api/short body:', req.body);
         try{
         const originalUrl = req.body.originalUrl;
-        if(!originalUrl) return res.status(500).json({error:'original error'});
+        if(!originalUrl) return res.status(400).json({error:'original error'});
         const shortUrl=nanoid(8);
         const url =  new Url({originalUrl,shortUrl});
             await url.save();
             return res.status(200).json({message: "URL generated", url:url})
         }catch(error){
-            console.log(error)
-            res.status(500).json({error:'server error'});
+            console.log("POST /api/short failed:",error);
+            res.status(500).json({error:error.message || 'server error'});
         }
     })
 app.get('/:shortUrl',async(req,res)=>{
