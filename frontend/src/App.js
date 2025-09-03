@@ -1,13 +1,17 @@
-import { Button, TextField, Typography, Paper } from '@mui/material';
+import { Button, TextField, Typography, Paper, CircularProgress } from '@mui/material';
 import { useState } from 'react';
 import axios from 'axios';
 
 function App() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
+  const [loading, setLoading] = useState(false); 
 
   const submitUrl = async (e) => {
     e.preventDefault();
+    setLoading(true);  
+    setShortUrl("");  
+
     try {
       const data = await axios.post("https://anyaurl.onrender.com/api/short", {
         originalUrl: url
@@ -15,6 +19,8 @@ function App() {
       setShortUrl("https://anyaurl.onrender.com/" + data.data.url.shortUrl);
     } catch (err) {
       console.error("Error creating short URL:", err);
+    } finally {
+      setLoading(false); // hide loader
     }
   };
 
@@ -62,12 +68,19 @@ function App() {
               backgroundColor: "#1B3C53",
               "&:hover": { backgroundColor: "#456882" },
             }}
+            disabled={loading} // disable while loading
           >
-            Submit
+            {loading ? "Processing..." : "Submit"}
           </Button>
         </form>
 
-        {shortUrl && (
+        {loading && (
+          <div style={{ marginTop: 20 }}>
+            <CircularProgress style={{ color: "#1B3C53" }} />
+          </div>
+        )}
+
+        {shortUrl && !loading && (
           <Typography
             variant="h6"
             sx={{ marginTop: 2, color: "#1B3C53", wordBreak: "break-word" }}
