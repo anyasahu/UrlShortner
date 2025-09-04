@@ -5,12 +5,12 @@ import axios from 'axios';
 function App() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const submitUrl = async (e) => {
     e.preventDefault();
-    setLoading(true);  
-    setShortUrl("");  
+    setLoading(true);   // show loader every submit
+    setShortUrl("");    // clear old result
 
     try {
       const data = await axios.post("https://anyaurl.onrender.com/api/short", {
@@ -68,18 +68,20 @@ function App() {
               backgroundColor: "#1B3C53",
               "&:hover": { backgroundColor: "#456882" },
             }}
-            disabled={loading} // disable while loading
+            disabled={loading} // prevent multiple clicks
           >
             {loading ? "Processing..." : "Submit"}
           </Button>
         </form>
 
+        {/* Loader should appear on every submit */}
         {loading && (
           <div style={{ marginTop: 20 }}>
             <CircularProgress style={{ color: "#1B3C53" }} />
           </div>
         )}
 
+        {/* Show result only when loading is done */}
         {shortUrl && !loading && (
           <Typography
             variant="h6"
