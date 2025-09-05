@@ -9,18 +9,18 @@ function App() {
 
   const submitUrl = async (e) => {
     e.preventDefault();
-    setLoading(true);   // show loader every submit
-    setShortUrl("");    // clear old result
+    setLoading(true);
+    setShortUrl("");
 
     try {
-      const data = await axios.post("https://anyaurl.onrender.com/api/short", {
+      const data = await axios.post("http://localhost:3000/api/short", {
         originalUrl: url
       });
-      setShortUrl("https://anyaurl.onrender.com/" + data.data.url.shortUrl);
+      setShortUrl("http://localhost:3000/" + data.data.url.shortUrl);
     } catch (err) {
       console.error("Error creating short URL:", err);
     } finally {
-      setLoading(false); // hide loader
+      setLoading(false);
     }
   };
 
@@ -31,67 +31,89 @@ function App() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#F9F3EF",
+        backgroundColor: "#0d0d0d", // dark background
       }}
     >
       <Paper
-        elevation={6}
+        elevation={8}
         sx={{
           padding: 4,
-          borderRadius: 4,
-          backgroundColor: "#D2C1B6",
+          borderRadius: 3,
+          backgroundColor: "#1a1a1a",
           textAlign: "center",
-          width: "400px",
+          width: "500px",
           maxWidth: "90%",
+          color: "#fff",
         }}
       >
-        <Typography variant="h4" gutterBottom sx={{ color: "#1B3C53" }}>
-          URL Shortener
+        {/* Heading */}
+        <Typography variant="h4" gutterBottom sx={{ color: "#FFD700", fontWeight: "bold" }}>
+          Short URL
+        </Typography>
+        <Typography variant="subtitle1" sx={{ marginBottom: 3 }}>
+          Paste the URL to be shortened
         </Typography>
 
+        {/* Form */}
         <form
           onSubmit={submitUrl}
-          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          style={{
+            display: "flex",
+            gap: "10px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <TextField
             onChange={(e) => setUrl(e.target.value)}
-            label="Enter Original URL"
-            placeholder="https://example.com"
+            placeholder="Enter the link here"
             variant="outlined"
             fullWidth
+            sx={{
+              input: { color: "#fff" },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: "#FFD700" },
+                "&:hover fieldset": { borderColor: "#FFD700" },
+                "&.Mui-focused fieldset": { borderColor: "#FFD700" },
+              },
+              "& .MuiInputLabel-root": { color: "#FFD700" },
+            }}
           />
 
           <Button
             type="submit"
             variant="contained"
             sx={{
-              backgroundColor: "#1B3C53",
-              "&:hover": { backgroundColor: "#456882" },
+              backgroundColor: "#FFD700",
+              color: "#000",
+              fontWeight: "bold",
+              "&:hover": { backgroundColor: "#e6c200" },
             }}
-            disabled={loading} // prevent multiple clicks
+            disabled={loading}
           >
-            {loading ? "Processing..." : "Submit"}
+            {loading ? "..." : "Shorten"}
           </Button>
         </form>
 
-        {/* Loader should appear on every submit */}
+        {/* Loader */}
         {loading && (
           <div style={{ marginTop: 20 }}>
-            <CircularProgress style={{ color: "#1B3C53" }} />
+            <CircularProgress style={{ color: "#FFD700" }} />
           </div>
         )}
 
-        {/* Show result only when loading is done */}
+        {/* Short URL result */}
         {shortUrl && !loading && (
           <Typography
             variant="h6"
-            sx={{ marginTop: 2, color: "#1B3C53", wordBreak: "break-word" }}
+            sx={{
+              marginTop: 3,
+              color: "#FFD700",
+              wordBreak: "break-word",
+            }}
           >
             Your short URL:{" "}
-            <a
-              href={shortUrl}
-              style={{ color: "#456882", fontWeight: "bold" }}
-            >
+            <a href={shortUrl} style={{ color: "#FFD700", fontWeight: "bold" }}>
               {shortUrl}
             </a>
           </Typography>
