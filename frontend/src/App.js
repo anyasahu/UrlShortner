@@ -13,10 +13,10 @@ function App() {
     setShortUrl(""); // clear old link
 
     try {
-      const data = await axios.post("http://localhost:3000/api/short", {
+      const data = await axios.post("https://anyaurl.onrender.com/api/short", {
         originalUrl: url,
       });
-      setShortUrl("http://localhost:3000/" + data.data.url.shortUrl);
+      setShortUrl("https://anyaurl.onrender.com/" + data.data.url.shortUrl);
     } catch (err) {
       console.error("Error creating short URL:", err);
     } finally {
