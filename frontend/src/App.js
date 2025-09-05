@@ -10,11 +10,11 @@ function App() {
   const submitUrl = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setShortUrl("");
+    setShortUrl(""); // clear old link
 
     try {
       const data = await axios.post("http://localhost:3000/api/short", {
-        originalUrl: url
+        originalUrl: url,
       });
       setShortUrl("http://localhost:3000/" + data.data.url.shortUrl);
     } catch (err) {
@@ -31,7 +31,7 @@ function App() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#0d0d0d", // dark background
+        backgroundColor: "#0d0d0d",
       }}
     >
       <Paper
@@ -62,6 +62,7 @@ function App() {
             gap: "10px",
             alignItems: "center",
             justifyContent: "center",
+            flexDirection: "column",
           }}
         >
           <TextField
@@ -76,9 +77,21 @@ function App() {
                 "&:hover fieldset": { borderColor: "#FFD700" },
                 "&.Mui-focused fieldset": { borderColor: "#FFD700" },
               },
-              "& .MuiInputLabel-root": { color: "#FFD700" },
             }}
           />
+
+          {/* Loader OR Short URL result (right below input) */}
+          <div style={{ minHeight: "40px", marginTop: "10px" }}>
+            {loading && <CircularProgress size={28} style={{ color: "#FFD700" }} />}
+            {!loading && shortUrl && (
+              <Typography
+                variant="body1"
+                sx={{ color: "#FFD700", fontWeight: "bold", wordBreak: "break-word" }}
+              >
+                {shortUrl}
+              </Typography>
+            )}
+          </div>
 
           <Button
             type="submit"
@@ -88,36 +101,13 @@ function App() {
               color: "#000",
               fontWeight: "bold",
               "&:hover": { backgroundColor: "#e6c200" },
+              marginTop: 2,
             }}
             disabled={loading}
           >
-            {loading ? "..." : "Shorten"}
+            {loading ? "Processing..." : "Shorten"}
           </Button>
         </form>
-
-        {/* Loader */}
-        {loading && (
-          <div style={{ marginTop: 20 }}>
-            <CircularProgress style={{ color: "#FFD700" }} />
-          </div>
-        )}
-
-        {/* Short URL result */}
-        {shortUrl && !loading && (
-          <Typography
-            variant="h6"
-            sx={{
-              marginTop: 3,
-              color: "#FFD700",
-              wordBreak: "break-word",
-            }}
-          >
-            Your short URL:{" "}
-            <a href={shortUrl} style={{ color: "#FFD700", fontWeight: "bold" }}>
-              {shortUrl}
-            </a>
-          </Typography>
-        )}
       </Paper>
     </div>
   );
